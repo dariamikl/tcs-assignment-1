@@ -177,10 +177,13 @@ def dfs(graph, first, visited={}):
 
     not_visited = set([t[2] for t in graph[first]]) - visited
 
-    not_visited_list = [t[2] for t in graph[first]]
+    # not_visited_list = [t[2] for t in graph[first]]
 
-    if len(not_visited) != len(not_visited_list):
-        raise_warning(WARNING3)
+    # print(not_visited)
+    # print(not_visited_list)
+    #
+    # if len(not_visited) != len(not_visited_list):
+    #     raise_warning(WARNING3)
 
     for next in not_visited:
         visited = set(list(visited) + list(dfs(graph, next, visited)))
