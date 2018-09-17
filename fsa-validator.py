@@ -60,8 +60,8 @@ def init():
     content = file.read()
     check_input(content)
     content_list = content.split("\n")
-    for i in range(content_list.__len__()):
-        print(f'{i}. {content_list.__getitem__(i)}')
+    # for i in range(content_list.__len__()):
+    #     print(f'{i}. {content_list.__getitem__(i)}')
     states = parse_into_list(content_list.__getitem__(0))
     alpha = parse_into_list(content_list.__getitem__(1))
     init_state = parse_into_list(content_list.__getitem__(2))[0]
@@ -105,7 +105,7 @@ def add_transition():
 
 def check_input(content):
     match = re.match(template, content)
-    print(content)
+    # print(content)
     if not match:
         raise E5()
 
@@ -113,7 +113,7 @@ def check_input(content):
 def parse_into_list(str):
     str_list = str[str.find("{") + 1:str.find("}")].split(',')
 
-    print(str_list)
+    # print(str_list)
     return str_list
 
 
@@ -122,7 +122,7 @@ def parse_transitions(list, states, alpha):
     # for
     for trans in list:
         parsed_items = trans.split('>')
-        print(parsed_items)
+        # print(parsed_items)
         check_states({parsed_items[0], parsed_items[2]}, states)
         check_transition(parsed_items[1], alpha)
 
