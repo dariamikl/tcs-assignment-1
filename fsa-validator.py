@@ -29,7 +29,7 @@ class E1(Error):
 
     def __init__(self, state):
         super().__init__()
-        self.message = 'A state {0} is not in set of states'.format(state)
+        self.message = "A state '{0}' is not in set of states".format(state)
 
 
 class E2(Error):
@@ -42,7 +42,7 @@ class E3(Error):
 
     def __init__(self, trans):
         super().__init__()
-        self.message = 'A transition {0} is not represented in the alphabet'.format(trans)
+        self.message = "A transition '{0}' is not represented in the alphabet".format(trans)
 
 
 class E4(Error):
@@ -197,7 +197,7 @@ def check_components(states, init_state, parsed_trans_list):
 
     for state in states:
         component = dfs(graph, state)
-        if component.__len__() == states.__len__():
+        if component.__len__() != states.__len__():
             raise_warning(WARNING2)
         is_one = is_one or component.__len__() == states.__len__()
 
