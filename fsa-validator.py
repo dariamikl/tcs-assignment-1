@@ -80,6 +80,8 @@ def init():
     parsed_trans_list = parse_transitions(trans_list, states, alpha)
     # print(parsed_trans_list)
     check_components(states, init_state, parsed_trans_list)
+    complete = check_completeness(states, init_state, parsed_trans_list)
+    print("is complete " + str(complete))
 
     print_warnings(warnings_raised)
 
@@ -177,14 +179,6 @@ def dfs(graph, first, visited={}):
 
     not_visited = set([t[2] for t in graph[first]]) - visited
 
-    # not_visited_list = [t[2] for t in graph[first]]
-
-    # print(not_visited)
-    # print(not_visited_list)
-    #
-    # if len(not_visited) != len(not_visited_list):
-    #     raise_warning(WARNING3)
-
     for next in not_visited:
         visited = set(list(visited) + list(dfs(graph, next, visited)))
     return visited
@@ -207,6 +201,25 @@ def check_components(states, init_state, parsed_trans_list):
 
     if not is_one:
         raise E2
+
+
+def check_completeness(states, init_state, parsed_trans_list):
+    res = True
+    d = {}
+
+    for state in states:
+        d[state] = []
+
+    for transition in parsed_trans_list:
+        d[transition[0]] += [transition[1]]
+
+    for k in d:
+        res = len(set(d[k])) == len(states) and res
+
+        if res and len(set(d[k])) != len(d[k]):
+            raise_warning(WARNING3)
+
+    return res
 
 
 try:
