@@ -123,7 +123,7 @@ def parse_transitions(list, states, alpha):
     for trans in list:
         parsed_items = trans.split('>')
         # print(parsed_items)
-        check_states({parsed_items[0], parsed_items[2]}, states)
+        check_states([parsed_items[0], parsed_items[2]], states)
         check_transition(parsed_items[1], alpha)
 
 
