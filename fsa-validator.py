@@ -15,6 +15,8 @@ warnings_raised = []
 report = ""
 template = r'states={((\w+,)*\w+|'')}\nalpha={((\w+,)*\w+|'')}\ninit.st={((\w+,)*\w+|'')}\nfin.st={((\w+,)*\w+|'')}\ntrans={((\w+>\w+>\w+,)*\w+>\w+>\w+|'')}'
 
+f = open("result.txt", 'w')
+
 
 class Error(Exception):
     name = 'Error:'
@@ -61,31 +63,31 @@ def init():
     check_input(content)
     content_list = content.split("\n")
     # for i in range(content_list.__len__()):
-    #     print(f'{i}. {content_list.__getitem__(i)}')
+    #     f.write(f'{i}. {content_list.__getitem__(i)}')
     states = parse_into_list(content_list.__getitem__(0))
     alpha = parse_into_list(content_list.__getitem__(1))
     init_state = parse_into_list(content_list.__getitem__(2))[0]
     fin_states = parse_into_list(content_list.__getitem__(3))
     trans_list = parse_into_list(content_list.__getitem__(4))
 
-    # print(f'states: {states}\n')
-    # print(f'alphabet: {alpha}\n')
-    # print(f'initial state: {init_state}\n')
-    # print(f'final states: {fin_states}\n')
-    # print(f'transition list: {trans_list}\n')
+    # f.write(f'states: {states}\n')
+    # f.write(f'alphabet: {alpha}\n')
+    # f.write(f'initial state: {init_state}\n')
+    # f.write(f'final states: {fin_states}\n')
+    # f.write(f'transition list: {trans_list}\n')
 
     # checking
     check_init_state(init_state, states)
     check_accepting_states(fin_states, states)
     parsed_trans_list = parse_transitions(trans_list, states, alpha)
-    # print(parsed_trans_list)
+    # f.write(parsed_trans_list)
     check_components(states, init_state, parsed_trans_list)
     complete = check_completeness(states, parsed_trans_list, alpha)
     if complete:
-        print("FSA is complete")
+        f.write("FSA is complete")
     else:
-        print("FSA is incomplete")
-    print_warnings(warnings_raised)
+        f.write("FSA is incomplete")
+    write_warnings(warnings_raised)
 
 
 def add_state(state, states):
@@ -114,7 +116,7 @@ def add_transition():
 
 def check_input(content):
     match = re.match(template, content)
-    # print(content)
+    # f.write(content)
     if not match:
         raise E5()
 
@@ -122,7 +124,7 @@ def check_input(content):
 def parse_into_list(str):
     str_list = str[str.find("{") + 1:str.find("}")].split(',')
 
-    # print(str_list)
+    # f.write(str_list)
     return str_list
 
 
@@ -132,7 +134,7 @@ def parse_transitions(trans_list, states, alpha):
 
     for trans in trans_list:
         parsed_items = trans.split('>')
-        # print(parsed_items)
+        # f.write(parsed_items)
         check_states([parsed_items[0], parsed_items[2]], states)
         check_transition(parsed_items[1], alpha)
         parsed_list.append(parsed_items)
@@ -159,15 +161,15 @@ def raise_warning(warning):
 '''Warnings'''
 
 
-def print_warnings(w_list):
+def write_warnings(w_list):
     w_list = list(set(w_list))
     w_list.sort()
 
     if w_list:
-        print("Warning:")
+        f.write("\nWarning:")
 
     for warning in w_list:
-        print('{0}'.format(warning))
+        f.write('\n{0}'.format(warning))
 
 
 def check_accepting_states(fin_states, states):
@@ -235,4 +237,5 @@ def check_completeness(states, parsed_trans_list, alpha):
 try:
     init()
 except Error as e:
-    print(e)
+    f.write("Error:\n")
+    f.write(str(e))
