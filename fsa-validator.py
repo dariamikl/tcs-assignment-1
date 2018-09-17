@@ -78,7 +78,7 @@ def init():
     check_init_state(init_state, states)
     check_accepting_states(fin_states, states)
     parsed_trans_list = parse_transitions(trans_list, states, alpha)
-    print(parsed_trans_list)
+    # print(parsed_trans_list)
     check_components(states, init_state, parsed_trans_list)
 
     print_warnings(warnings_raised)
@@ -172,18 +172,18 @@ def check_transition(transition, alpha):
         raise E3(transition)
 
 
-def dfs(graph, first, visited=None):
-    if visited is None:
-        visited = set()
-
+def dfs(graph, first, visited={}):
     visited = set(list(visited) + [first])
 
     not_visited = set([t[2] for t in graph[first]]) - visited
 
-    # here is i can check whether it is (non) deterministic
+    not_visited_list = [t[2] for t in graph[first]]
+
+    if len(not_visited) != len(not_visited_list):
+        raise_warning(WARNING3)
 
     for next in not_visited:
-        dfs(graph, next, visited)
+        visited = set(list(visited) + list(dfs(graph, next, visited)))
     return visited
 
 
@@ -196,11 +196,13 @@ def check_components(states, init_state, parsed_trans_list):
     for transition in parsed_trans_list:
         graph[transition[0]].append(transition)
 
-    print("g", graph, "\ns\n", states)
+    is_one = False
 
-    component = dfs(graph, init_state)
+    for state in states:
+        component = dfs(graph, state)
+        is_one = is_one or component.__len__() == states.__len__()
 
-    if component.__len__() != states.__len__():
+    if not is_one:
         raise E2
 
 
