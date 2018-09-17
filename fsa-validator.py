@@ -68,11 +68,11 @@ def init():
     fin_states = parse_into_list(content_list.__getitem__(3))
     trans_list = parse_into_list(content_list.__getitem__(4))
 
-    print(f'states: {states}\n')
-    print(f'alphabet: {alpha}\n')
-    print(f'initial state: {init_state}\n')
-    print(f'final states: {fin_states}\n')
-    print(f'transition list: {trans_list}\n')
+    # print(f'states: {states}\n')
+    # print(f'alphabet: {alpha}\n')
+    # print(f'initial state: {init_state}\n')
+    # print(f'final states: {fin_states}\n')
+    # print(f'transition list: {trans_list}\n')
 
     # checking
     check_init_state(init_state, states)
@@ -81,8 +81,10 @@ def init():
     # print(parsed_trans_list)
     check_components(states, init_state, parsed_trans_list)
     complete = check_completeness(states, parsed_trans_list, alpha)
-    print("is complete " + str(complete))
-
+    if complete:
+        print("FSA is complete")
+    else:
+        print("FSA is incomplete")
     print_warnings(warnings_raised)
 
 
@@ -157,9 +159,15 @@ def raise_warning(warning):
 '''Warnings'''
 
 
-def print_warnings(list):
-    for warning in list:
-        print('{0}\n'.format(warning))
+def print_warnings(w_list):
+    w_list = list(set(w_list))
+    w_list.sort()
+
+    if w_list:
+        print("Warning:")
+
+    for warning in w_list:
+        print('{0}'.format(warning))
 
 
 def check_accepting_states(fin_states, states):
