@@ -72,9 +72,9 @@ def init():
     print(f'initial state: {init_state}\n')
     print(f'final states: {fin_states}\n')
     print(f'transition list: {trans_list}\n')
-    check_init_state(init_state)
+    check_init_state(init_state, states)
     # check_state(init_state, states)
-    check_accepting_st(fin_states)
+    check_accepting_states(fin_states, states)
     print_warnings(warnings_raised)
     parse_transitions(trans_list, states, alpha)
 
@@ -127,7 +127,8 @@ def parse_transitions(list, states, alpha):
         check_transition(parsed_items[1], alpha)
 
 
-def check_init_state(state):
+def check_init_state(state, states):
+    check_states([state], states)
     if not state:
         raise E4()
 
@@ -150,9 +151,11 @@ def print_warnings(list):
         print('{0}\n'.format(warning))
 
 
-def check_accepting_st(fin_states):
+def check_accepting_states(fin_states, states):
     if fin_states.__len__() == 1 and fin_states[0].__eq__(''):
         raise_warning(WARNING1)
+
+    check_states(fin_states, states)
 
 
 def check_transition(transition, alpha):
