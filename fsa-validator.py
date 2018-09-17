@@ -80,7 +80,7 @@ def init():
     parsed_trans_list = parse_transitions(trans_list, states, alpha)
     # print(parsed_trans_list)
     check_components(states, init_state, parsed_trans_list)
-    complete = check_completeness(states, init_state, parsed_trans_list)
+    complete = check_completeness(states, parsed_trans_list, alpha)
     print("is complete " + str(complete))
 
     print_warnings(warnings_raised)
@@ -205,7 +205,7 @@ def check_components(states, init_state, parsed_trans_list):
         raise E2
 
 
-def check_completeness(states, init_state, parsed_trans_list):
+def check_completeness(states, parsed_trans_list, alpha):
     res = True
     d = {}
 
@@ -216,7 +216,7 @@ def check_completeness(states, init_state, parsed_trans_list):
         d[transition[0]] += [transition[1]]
 
     for k in d:
-        res = len(set(d[k])) == len(states) and res
+        res = len(set(d[k])) == len(alpha) and res
 
         if res and len(set(d[k])) != len(d[k]):
             raise_warning(WARNING3)
