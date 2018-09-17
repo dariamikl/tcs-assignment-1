@@ -197,6 +197,8 @@ def check_components(states, init_state, parsed_trans_list):
 
     for state in states:
         component = dfs(graph, state)
+        if component.__len__() == states.__len__():
+            raise_warning(WARNING2)
         is_one = is_one or component.__len__() == states.__len__()
 
     if not is_one:
