@@ -67,16 +67,21 @@ def init():
     init_state = parse_into_list(content_list.__getitem__(2))[0]
     fin_states = parse_into_list(content_list.__getitem__(3))
     trans_list = parse_into_list(content_list.__getitem__(4))
+
     print(f'states: {states}\n')
     print(f'alphabet: {alpha}\n')
     print(f'initial state: {init_state}\n')
     print(f'final states: {fin_states}\n')
     print(f'transition list: {trans_list}\n')
+
+    # checking
     check_init_state(init_state, states)
-    # check_state(init_state, states)
     check_accepting_states(fin_states, states)
+    parsed_trans_list = parse_transitions(trans_list, states, alpha)
+    print(parsed_trans_list)
+    check_components(states, init_state, parsed_trans_list)
+
     print_warnings(warnings_raised)
-    parse_transitions(trans_list, states, alpha)
 
 
 def add_state(state, states):
@@ -117,14 +122,18 @@ def parse_into_list(str):
     return str_list
 
 
-def parse_transitions(list, states, alpha):
+def parse_transitions(trans_list, states, alpha):
     adjacency_matrix = []
-    # for
-    for trans in list:
+    parsed_list = []
+
+    for trans in trans_list:
         parsed_items = trans.split('>')
         # print(parsed_items)
         check_states([parsed_items[0], parsed_items[2]], states)
         check_transition(parsed_items[1], alpha)
+        parsed_list.append(parsed_items)
+
+    return parsed_list
 
 
 def check_init_state(state, states):
@@ -163,8 +172,36 @@ def check_transition(transition, alpha):
         raise E3(transition)
 
 
-def dfs(matrix):
-    pass
+def dfs(graph, first, visited=None):
+    if visited is None:
+        visited = set()
+
+    visited = set(list(visited) + [first])
+
+    not_visited = set([t[2] for t in graph[first]]) - visited
+
+    # here is i can check whether it is (non) deterministic
+
+    for next in not_visited:
+        dfs(graph, next, visited)
+    return visited
+
+
+def check_components(states, init_state, parsed_trans_list):
+    graph = {}
+
+    for state in states:
+        graph[state] = []
+
+    for transition in parsed_trans_list:
+        graph[transition[0]].append(transition)
+
+    print("g", graph, "\ns\n", states)
+
+    component = dfs(graph, init_state)
+
+    if component.__len__() != states.__len__():
+        raise E2
 
 
 try:
