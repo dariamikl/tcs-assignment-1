@@ -62,25 +62,17 @@ def init():
     content = file.read()
     check_input(content)
     content_list = content.split("\n")
-    # for i in range(content_list.__len__()):
-    #     f.write(f'{i}. {content_list.__getitem__(i)}')
     states = parse_into_list(content_list.__getitem__(0))
     alpha = parse_into_list(content_list.__getitem__(1))
     init_state = parse_into_list(content_list.__getitem__(2))[0]
     fin_states = parse_into_list(content_list.__getitem__(3))
     trans_list = parse_into_list(content_list.__getitem__(4))
 
-    # f.write(f'states: {states}\n')
-    # f.write(f'alphabet: {alpha}\n')
-    # f.write(f'initial state: {init_state}\n')
-    # f.write(f'final states: {fin_states}\n')
-    # f.write(f'transition list: {trans_list}\n')
 
     # checking
     check_init_state(init_state, states)
     check_accepting_states(fin_states, states)
     parsed_trans_list = parse_transitions(trans_list, states, alpha)
-    # f.write(parsed_trans_list)
     check_components(states, init_state, parsed_trans_list)
     complete = check_completeness(states, parsed_trans_list, alpha)
     if complete:
@@ -93,48 +85,22 @@ def init():
 def add_state(state, states):
     states.append(state)
 
-
-def add_alphabet_item():
-    pass
-
-
-def add_finite_state():
-    pass
-
-
-def add_initial_state(state):
-    pass
-
-
-def create_transition_matrix():
-    pass
-
-
-def add_transition():
-    pass
-
-
 def check_input(content):
     match = re.match(template, content)
-    # f.write(content)
     if not match:
         raise E5()
 
 
 def parse_into_list(str):
     str_list = str[str.find("{") + 1:str.find("}")].split(',')
-
-    # f.write(str_list)
     return str_list
 
 
 def parse_transitions(trans_list, states, alpha):
-    adjacency_matrix = []
     parsed_list = []
 
     for trans in trans_list:
         parsed_items = trans.split('>')
-        # f.write(parsed_items)
         check_states([parsed_items[0], parsed_items[2]], states)
         check_transition(parsed_items[1], alpha)
         parsed_list.append(parsed_items)
